@@ -15,11 +15,11 @@ body {
     border-radius: 10px;
     width: 350px;
     text-align: center;
+    margin: 100px;
 }
 
 .userInputs {
-    margin-bottom: 20px;
-}
+    margin-top: 10px;}
 
 .userInputs label, .userInputs input {
     margin: 5px;
@@ -29,25 +29,26 @@ body {
     margin-bottom: 10px;
 }
 
+#calendarBox {
+    height: 500px;
+    width: 500px;
+}
+
 button {
     padding: 5px 10px;
-    margin: 0 5px;
-    background-color: #c9184a;
-    color: white;
+    background-color: #aa4465;
+    color: #d1b6dd;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-button:disabled {
-    background-color: #d3d3d3;
-    cursor: not-allowed;
+    margin-top: 25px;
+    margin-bottom: 25px;
 }
 
 #calendar {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 1px;
+    gap: 2.5px;
 }
 
 #calendar div {
@@ -57,6 +58,10 @@ button:disabled {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
+
+    width: 50px;
+    height: 50px;
+
 }
 
 #calendar div.active {

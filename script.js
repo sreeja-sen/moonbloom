@@ -1,95 +1,138 @@
-// Initialize variables
-let today = new Date();
-let currentMonth = today.getMonth();
-let currentYear = today.getFullYear();
+document.addEventListener('DOMContentLoaded', () => {
+    const settingsBtn = document.getElementById('settingsBtn');
+    const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const keyToggle = document.getElementById('keyToggle');
+    const settingsPanel = document.getElementById('settingsPanel');
+    const calendar = document.getElementById('calendar');
+    const monthDisplay = document.getElementById('monthDisplay');
+    const prevMonthBtn = document.getElementById('prevMonthBtn');
+    const nextMonthBtn = document.getElementById('nextMonthBtn');
+    const keyPanel = document.getElementById('keyPanel');
 
-let periodData = []; 
+    let periods = [];
+    let cycleLength = 28;
+    let periodLength = 5;
+    let currentDate = new Date();
 
-const calendar = document.getElementById('calendar');
-const currentMonthSpan = document.getElementById('currentMonth');
+    const getPredictedPeriodDays = () => {
+        const predictedPeriods = [];
+        if (periods.length === 0) return predictedPeriods;
 
-const periodLengthInput = document.getElementById('periodLength');
-const cycleLengthInput = document.getElementById('cycleLength');
+        let firstPeriodDate = new Date(periods[0]);
 
-document.getElementById('prevMonth').addEventListener('click', () => changeMonth(-1));
-document.getElementById('nextMonth').addEventListener('click', () => changeMonth(1));
-document.getElementById('prevYear').addEventListener('click', () => changeYear(-1));
-document.getElementById('nextYear').addEventListener('click', () => changeYear(1));
+        for (let i = 0; i < 12; i++) {
+            let periodStartDate = new Date(firstPeriodDate);
+            periodStartDate.setDate(periodStartDate.getDate() + i * cycleLength);
+            for (let j = 0; j < periodLength; j++) {
+                let periodDate = new Date(periodStartDate);
+                periodDate.setDate(periodDate.getDate() + j);
+                predictedPeriods.push(periodDate.toISOString().split('T')[0]);
+            }
+        }
+        return predictedPeriods;
+    };
 
-function changeMonth(direction) {
-    currentMonth += direction;
-    if (currentMonth < 0) {
-        currentMonth = 11;
-        currentYear -= 1;
-    } else if (currentMonth > 11) {
-        currentMonth = 0;
-        currentYear += 1;
-    }
-    renderCalendar();
-}
+    const getOvulationDays = (predictedPeriods) => {
+        const ovulationDays = [];
+        const ovulationOffset = Math.floor(cycleLength / 2);
+        predictedPeriods.forEach(periodDate => {
+            let ovulationDate = new Date(periodDate);
+            ovulationDate.setDate(ovulationDate.getDate() - ovulationOffset);
+            ovulationDays.push(ovulationDate.toISOString().split('T')[0]);
+        });
+        return ovulationDays;
+    };
 
-function changeYear(direction) {
-    currentYear += direction;
-    renderCalendar();
-}
+    const getDayHeaders = () =>
 
-function renderCalendar() {
-    calendar.innerHTML = ''; 
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"];
-    currentMonthSpan.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+ {
+        return '<div class="day-header">Sun</div>' +
+               '<div class="day-header">Mon</div>' +
+               '<div class="day-header">Tue</div>' +
+               '<div class="day-header">Wed</div>' +
+               '<div class="day-header">Thu</div>' +
+               '<div class="day-header">Fri</div>' +
+               '<div class="day-header">Sat</div>';
+    };
 
-    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const updateCalendar = () => {
+        calendar.innerHTML = getDayHeaders();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const firstDayOfMonth = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    for (let i = 0; i < firstDay; i++) {
-        calendar.innerHTML += '<div></div>';
-    }
+        const predictedPeriods = getPredictedPeriodDays();
+        const ovulationDays = getOvulationDays(predictedPeriods);
 
-    for (let day = 1; day <= daysInMonth; day++) {
-        const date = new Date(currentYear, currentMonth, day);
-        const dateStr = date.toISOString().split('T')[0];
-        const dayElement = document.createElement('div');
-
-        dayElement.textContent = day;
-        dayElement.addEventListener('click', () => togglePeriod(dateStr));
-
-        if (periodData.includes(dateStr)) {
-            dayElement.classList.add('active');
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            calendar.innerHTML += '<div></div>';
         }
 
-        if (isPredictedPeriod(date)) {
-            dayElement.classList.add('predicted');
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(year, month, day).toISOString().split('T')[0];
+            let dayClass = 'normal';
+            if (periods.includes(date)) {
+                dayClass = 'period';
+            } else if (predictedPeriods.includes(date)) {
+                dayClass = 'period';
+            } else if (ovulationDays.includes(date)) {
+                dayClass = 'ovulation';
+            }
+            calendar.innerHTML += `<div class="${dayClass}" data-date="${date}">${day}</div>`;
         }
 
-        calendar.appendChild(dayElement);
-    }
-}
+        monthDisplay.textContent = `${currentDate.toLocaleString('default', { month: 'long' })} ${year}`;
+    };
 
-function togglePeriod(dateStr) {
-    const index = periodData.indexOf(dateStr);
-    if (index > -1) {
-        periodData.splice(index, 1);
-    } else {
-        periodData.push(dateStr);
-    }
-    renderCalendar();
-}
+    const togglePeriod = (event) => {
+        const date = event.target.dataset.date;
+        if (!date) return;
 
-function isPredictedPeriod(date) {
-    if (periodData.length === 0) return false;
-    
-    const lastPeriodDate = new Date(periodData[periodData.length - 1]);
-    const periodLength = parseInt(periodLengthInput.value);
-    const cycleLength = parseInt(cycleLengthInput.value);
+        if (periods.includes(date)) {
+            periods = periods.filter(d => d !== date);
+        } else {
+            periods.push(date);
+            periods.sort();
+        }
+        updateCalendar();
+    };
 
-    let nextPeriodStart = new Date(lastPeriodDate);
-    nextPeriodStart.setDate(nextPeriodStart.getDate() + cycleLength);
+    const saveSettings = () => {
+        cycleLength = parseInt(document.getElementById('cycleLength').value);
+        periodLength = parseInt(document.getElementById('periodLength').value);
+        updateCalendar();
+    };
 
-    let nextPeriodEnd = new Date(nextPeriodStart);
-    nextPeriodEnd.setDate(nextPeriodEnd.getDate() + periodLength - 1);
+    settingsBtn.addEventListener('click', () => {
+        settingsPanel.style.display = settingsPanel.style.display === 'block' ? 'none' : 'block';
+    });
 
-    return date >= nextPeriodStart && date <= nextPeriodEnd;
-}
+    saveSettingsBtn.addEventListener('click', saveSettings);
 
-renderCalendar();
+    darkModeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    });
+
+    keyToggle.addEventListener('click', () => {
+        keyPanel.style.display = keyPanel.style.display === 'block' ? 'none' : 'block';
+        keyPanel.style.top = keyToggle.getBoundingClientRect().bottom + 'px';
+        keyPanel.style.left = keyToggle.getBoundingClientRect().left + 'px';
+    });
+
+    prevMonthBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        updateCalendar();
+    });
+
+    nextMonthBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        updateCalendar();
+    });
+
+    calendar.addEventListener('click', togglePeriod);
+
+    updateCalendar();
+});

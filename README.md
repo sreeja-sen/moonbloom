@@ -66,4 +66,4 @@ The design of MoonBloom prioritizes simplicity and ease of use. I decided to use
 The application was built with scalability in mind. Each feature is encapsulated in its own component, allowing for easy maintenance and future expansion. For example, the Calendar component handles all calendar-related logic, making it straightforward to update or extend without affecting other parts of the app.
 
 # Hardcoded Authentication
-While the current login system uses hardcoded credentials, this was a deliberate choice (for now).
+While the current login system uses hardcoded credentials, this was a deliberate choice.

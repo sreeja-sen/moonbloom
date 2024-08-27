@@ -1,5 +1,5 @@
 .key-panel {
-    display: block; /* Changed to block to make it visible */
+    display: block;
     position: absolute;
     background-color: white;
     padding: 10px;

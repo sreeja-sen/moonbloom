@@ -3,6 +3,7 @@ import Header from './components/Header';
 import SettingsPanel from './components/SettingsPanel';
 import KeyPanel from './components/KeyPanel';
 import Calendar from './components/Calendar';
+import LoginSignup from './components/LoginSignup';
 import './styles/App.css';
 import './index.css';
 
@@ -13,6 +14,7 @@ const App = () => {
     const [cycleLength, setCycleLength] = useState(28);
     const [periodLength, setPeriodLength] = useState(5);
     const [periods, setPeriods] = useState([]);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const toggleDarkMode = () => {
         setDarkMode(!darkMode);
@@ -39,12 +41,27 @@ const App = () => {
         setPeriods(periods.filter(d => d !== date));
     };
 
+    const handleLogin = (status) => {
+        setIsLoggedIn(status);
+    };
+
+    const handleLogout = () => {
+        setIsLoggedIn(false);
+    };
+
     return (
         <div className={`app ${darkMode ? 'dark-mode' : ''}`}>
-            <Header toggleDarkMode={toggleDarkMode} toggleSettings={toggleSettings} toggleKeyPanel={toggleKeyPanel} />
-            {settingsVisible && <SettingsPanel cycleLength={cycleLength} periodLength={periodLength} saveSettings={saveSettings} />}
-            {keyPanelVisible && <KeyPanel />}
-            <Calendar periods={periods} cycleLength={cycleLength} periodLength={periodLength} addPeriod={addPeriod} removePeriod={removePeriod} />
+            {!isLoggedIn ? (
+                <LoginSignup onLogin={handleLogin} />
+            ) : (
+                <>
+                    <Header toggleDarkMode={toggleDarkMode} toggleSettings={toggleSettings} toggleKeyPanel={toggleKeyPanel} />
+                    <button className="logout-button" onClick={handleLogout}>Log Out</button>
+                    {settingsVisible && <SettingsPanel cycleLength={cycleLength} periodLength={periodLength} saveSettings={saveSettings} />}
+                    {keyPanelVisible && <KeyPanel />}
+                    <Calendar periods={periods} cycleLength={cycleLength} periodLength={periodLength} addPeriod={addPeriod} removePeriod={removePeriod} />
+                </>
+            )}
         </div>
     );
 };

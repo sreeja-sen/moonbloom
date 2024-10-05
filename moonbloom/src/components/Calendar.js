@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import '../styles/Calendar.css'; // Corrected path
+import '../styles/Calendar.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const Calendar = ({ periods, cycleLength, periodLength, addPeriod, removePeriod }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -97,9 +99,17 @@ const Calendar = ({ periods, cycleLength, periodLength, addPeriod, removePeriod 
     return (
         <div className="calendar-container">
             <div className="month-controls">
-                <button onClick={() => setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() - 1)))}>⬅️</button>
+                
+                <button onClick={() => setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() - 1)))}>
+                    <FontAwesomeIcon icon={faArrowLeft} />
+                </button>
+                
                 <h2 id="monthDisplay">{currentDate.toLocaleString('default', { month: 'long' })} {currentDate.getFullYear()}</h2>
-                <button onClick={() => setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() + 1)))}>➡️</button>
+                
+                <button onClick={() => setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() + 1)))}>
+                    <FontAwesomeIcon icon={faArrowRight} />
+                </button>
+
             </div>
             <div id="calendar">
                 {getDayHeaders()}

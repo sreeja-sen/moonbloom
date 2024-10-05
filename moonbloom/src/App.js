@@ -55,11 +55,30 @@ const App = () => {
                 <LoginSignup onLogin={handleLogin} />
             ) : (
                 <>
-                    <Header toggleDarkMode={toggleDarkMode} toggleSettings={toggleSettings} toggleKeyPanel={toggleKeyPanel} />
-                    <button className="logout-button" onClick={handleLogout}>Log Out</button>
-                    {settingsVisible && <SettingsPanel cycleLength={cycleLength} periodLength={periodLength} saveSettings={saveSettings} />}
+                    <Header
+                        toggleDarkMode={toggleDarkMode} 
+                        toggleSettings={toggleSettings} 
+                        toggleKeyPanel={toggleKeyPanel}
+                    />
+                    
+                    
+                    
+                    {settingsVisible && <SettingsPanel
+                        cycleLength={cycleLength}
+                        periodLength={periodLength}
+                        saveSettings={saveSettings}
+                    />}
+
                     {keyPanelVisible && <KeyPanel />}
-                    <Calendar periods={periods} cycleLength={cycleLength} periodLength={periodLength} addPeriod={addPeriod} removePeriod={removePeriod} />
+                    
+                    <Calendar 
+                        periods={periods} 
+                        cycleLength={cycleLength} 
+                        periodLength={periodLength} 
+                        addPeriod={addPeriod} 
+                        removePeriod={removePeriod} 
+                    />
+                    <button className="logout-button" onClick={handleLogout}>Log Out</button>
                 </>
             )}
         </div>

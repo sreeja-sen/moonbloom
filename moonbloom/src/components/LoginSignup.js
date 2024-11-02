@@ -1,20 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import FirebaseApp from '../firebase.js';
 import '../styles/LoginSignup.css';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 
 const LoginSignup = ({ onLogin }) => {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = () => {
-        const hardcodedEmail = 'moon@bloom.com';
-        const hardcodedPassword = 'moonbloom123';
+    const [passwordVisible, setPasswordVisible] = useState(false);
 
-        if (email === hardcodedEmail && password === hardcodedPassword) {
-            onLogin(true);
+    const auth = useMemo(() => getAuth(FirebaseApp), []);
+
+    const handleSubmit = () => {
+        // const hardcodedEmail = 'moon@bloom.com';
+        // const hardcodedPassword = 'moonbloom123';
+        // hello@gmail.com
+        // helloworld
+
+        // login logic
+
+        if (isLogin) {
+            signInWithEmailAndPassword(auth, email, password)
+            .then(userCredential => {
+                console.log(userCredential.user);
+                onLogin(true);
+            })
+            .catch(error => {
+                console.error(error);
+                alert('Invalid email or password');
+            });
         } else {
-            alert('Invalid email or password');
+            createUserWithEmailAndPassword(auth, email, password)
+            .then(userCredential => {
+                console.log(userCredential.user);
+                onLogin(true);
+            })
+            .catch(error => {
+                console.error(error);
+                alert('Invalid email or password');
+            });            
         }
+
     };
 
     return (
@@ -28,11 +55,17 @@ const LoginSignup = ({ onLogin }) => {
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
-                    type="password"
+                    type={passwordVisible ? "text" : "password"}
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
+                <button
+                    className="password-toggle"
+                    onClick={() => setPasswordVisible(!passwordVisible)}
+                >
+                    Toggle
+                </button>
                 <button onClick={handleSubmit}>
                     {isLogin ? 'Login' : 'Sign Up'}
                 </button>

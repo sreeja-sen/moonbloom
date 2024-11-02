@@ -9,6 +9,7 @@
 }
 
 .login-signup-box {
+    position: relative;
     background-color: white;
     padding: 40px 30px;
     border-radius: 10px;
@@ -80,4 +81,14 @@
 
 .logout-button:hover {
     background-color: #b584d6;
+}
+
+.password-toggle {
+    position: absolute !important;
+    right: 0 !important;
+    width: 20px !important;
+    height: 20px !important;
+    background-color: transparent !important;
+    border: none !important;
+    color: black !important;
 }

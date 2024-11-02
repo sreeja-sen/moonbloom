@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import FirebaseApp from './firebase.js';
+
 import Header from './components/Header';
 import SettingsPanel from './components/SettingsPanel';
 import KeyPanel from './components/KeyPanel';
@@ -15,6 +17,8 @@ const App = () => {
     const [periodLength, setPeriodLength] = useState(5);
     const [periods, setPeriods] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    console.log(FirebaseApp);
 
     const toggleDarkMode = () => {
         setDarkMode(!darkMode);

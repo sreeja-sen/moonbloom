@@ -85,10 +85,14 @@
 
 .password-toggle {
     position: absolute !important;
-    right: 0 !important;
+    right: 40px !important;
     width: 20px !important;
     height: 20px !important;
     background-color: transparent !important;
     border: none !important;
     color: black !important;
+    
+    box-sizing: content-box;
+    padding: 4px !important;
+    transform: translateY(5px);
 }

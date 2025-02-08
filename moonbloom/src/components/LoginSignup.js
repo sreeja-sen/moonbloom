@@ -1,12 +1,18 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useContext } from 'react';
 import FirebaseApp from '../firebase.js';
 import '../styles/LoginSignup.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+
+import { userContext } from '../App.js';
 
 const LoginSignup = ({ onLogin }) => {
     const [isLogin, setIsLogin] = useState(true);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('hello@gmail.com');
+    const [password, setPassword] = useState('helloworld');
+
+    const { setUserEmail, setUserID } = useContext(userContext);
 
     const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -24,7 +30,9 @@ const LoginSignup = ({ onLogin }) => {
             signInWithEmailAndPassword(auth, email, password)
             .then(userCredential => {
                 console.log(userCredential.user);
-                onLogin(true);
+                onLogin(userCredential.user);
+                setUserEmail(userCredential.user.email)
+                setUserID(userCredential.user.uid)
             })
             .catch(error => {
                 console.error(error);
@@ -34,7 +42,7 @@ const LoginSignup = ({ onLogin }) => {
             createUserWithEmailAndPassword(auth, email, password)
             .then(userCredential => {
                 console.log(userCredential.user);
-                onLogin(true);
+                onLogin(userCredential.user);
             })
             .catch(error => {
                 console.error(error);
@@ -64,7 +72,7 @@ const LoginSignup = ({ onLogin }) => {
                     className="password-toggle"
                     onClick={() => setPasswordVisible(!passwordVisible)}
                 >
-                    Toggle
+                    <FontAwesomeIcon icon={faEye} />
                 </button>
                 <button onClick={handleSubmit}>
                     {isLogin ? 'Login' : 'Sign Up'}

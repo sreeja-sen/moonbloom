@@ -1,10 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useMemo, useEffect } from 'react';
 import '../styles/Calendar.css';
+import { userContext } from '../App';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-const Calendar = ({ periods, cycleLength, periodLength, addPeriod, removePeriod }) => {
+import FirebaseApp from '../firebase.js';
+import { ref, set, get, update } from "firebase/database"
+
+const Calendar = ({ periods, cycleLength, periodLength, addPeriod, removePeriod, setPeriods, database }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
+    const { uid } = useContext(userContext);
+
+    useEffect(() => {
+        if (database && uid) {
+            const updates = {
+                "calendar": periods
+            }
+            console.log("Updating")
+            update(ref(database, uid), updates)
+        }
+    }, [periods]);
+
+    useEffect(() => {
+        if (database && uid) {
+            console.log("Downloading")
+            get(ref(database, uid + "/calendar")).then(snapshot => {
+                const result = snapshot.val();
+                if (result) {
+                    setPeriods(result);
+                }
+            })
+        }
+    }, [database, uid]);
+
 
     const getPredictedPeriodDays = () => {
         const predictedPeriods = [];
@@ -46,7 +74,7 @@ const Calendar = ({ periods, cycleLength, periodLength, addPeriod, removePeriod 
                 <div className="day-header">Fri</div>
                 <div className="day-header">Sat</div>
             </>
-        );
+        );          
     };
 
     const updateCalendar = () => {

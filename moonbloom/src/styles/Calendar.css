@@ -39,7 +39,20 @@
     cursor: pointer;
 }
 
+@media screen and (max-width: 525px) {
+    #calendar {
+        gap: 5px;
+        margin: 0px auto;
+        padding: 5px;
+    }
+
+    #calendar div {
+        padding: 18px;
+    }
+}
+
 #calendar .day-header {
+    width: 0;
     font-weight: bold;
     background-color: transparent;
     cursor: default;
@@ -68,7 +81,7 @@
     color: #fff;
 }
 
-.dark-mode #calendar .normal {
+.dark-mode #calendar div {
     background-color: #444;
 }
 

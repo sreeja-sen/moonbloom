@@ -1,28 +1,27 @@
-import React, { useState } from 'react';
-import FirebaseApp from './firebase.js';
+import React, { useState, createContext, useMemo } from 'react';
 
 import Header from './components/Header';
 import SettingsPanel from './components/SettingsPanel';
 import KeyPanel from './components/KeyPanel';
 import Calendar from './components/Calendar';
 import LoginSignup from './components/LoginSignup';
+import { useTheme } from './useTheme';
 import './styles/App.css';
 import './index.css';
 
-const App = () => {
-    const [darkMode, setDarkMode] = useState(false);
+export const userContext = createContext({});
+
+const App = ({ database }) => {
+    const { darkMode } = useTheme();
     const [settingsVisible, setSettingsVisible] = useState(false);
     const [keyPanelVisible, setKeyPanelVisible] = useState(false);
     const [cycleLength, setCycleLength] = useState(28);
     const [periodLength, setPeriodLength] = useState(5);
     const [periods, setPeriods] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [uid, setUserID] = useState("")
+    const [email, setUserEmail] = useState("")
 
-    console.log(FirebaseApp);
-
-    const toggleDarkMode = () => {
-        setDarkMode(!darkMode);
-    };
 
     const toggleSettings = () => {
         setSettingsVisible(!settingsVisible);
@@ -35,6 +34,7 @@ const App = () => {
     const saveSettings = (cycle, period) => {
         setCycleLength(cycle);
         setPeriodLength(period);
+        toggleSettings();
     };
 
     const addPeriod = (date) => {
@@ -52,40 +52,43 @@ const App = () => {
     const handleLogout = () => {
         setIsLoggedIn(false);
     };
-
+    
     return (
-        <div className={`app ${darkMode ? 'dark-mode' : ''}`}>
-            {!isLoggedIn ? (
-                <LoginSignup onLogin={handleLogin} />
-            ) : (
-                <>
-                    <Header
-                        toggleDarkMode={toggleDarkMode} 
-                        toggleSettings={toggleSettings} 
-                        toggleKeyPanel={toggleKeyPanel}
-                    />
-                    
-                    
-                    
-                    {settingsVisible && <SettingsPanel
-                        cycleLength={cycleLength}
-                        periodLength={periodLength}
-                        saveSettings={saveSettings}
-                    />}
+        <userContext.Provider value={{ isLoggedIn, uid, email, setUserID, setUserEmail, handleLogout }} >
+            <div className={`app ${darkMode ? 'dark-mode' : ''}`}>
+                {!isLoggedIn ? (
+                    <LoginSignup onLogin={handleLogin} />
+                ) : (
+                    <>
+                        <Header
+                            toggleSettings={toggleSettings} 
+                            toggleKeyPanel={toggleKeyPanel}
+                            database={database}
+                        />
+                        
+                        
+                        
+                        {settingsVisible && <SettingsPanel
+                            cycleLength={cycleLength}
+                            periodLength={periodLength}
+                            saveSettings={saveSettings}
+                        />}
 
-                    {keyPanelVisible && <KeyPanel />}
-                    
-                    <Calendar 
-                        periods={periods} 
-                        cycleLength={cycleLength} 
-                        periodLength={periodLength} 
-                        addPeriod={addPeriod} 
-                        removePeriod={removePeriod} 
-                    />
-                    <button className="logout-button" onClick={handleLogout}>Log Out</button>
-                </>
-            )}
-        </div>
+                        {keyPanelVisible && <KeyPanel />}
+                        
+                        <Calendar 
+                            periods={periods} 
+                            cycleLength={cycleLength} 
+                            periodLength={periodLength} 
+                            addPeriod={addPeriod} 
+                            removePeriod={removePeriod}
+                            setPeriods={setPeriods}
+                            database={database} 
+                        />
+                    </>
+                )}
+            </div>
+        </userContext.Provider>
     );
 };
 

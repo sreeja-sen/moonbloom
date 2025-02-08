@@ -4,6 +4,7 @@
   padding: 0;
   background-color: #fbeef7;
   color: #333;
+  min-height: 100vh;
 }
 
 .dark-mode {

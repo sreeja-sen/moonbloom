@@ -1,0 +1,98 @@
+.login-signup-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #fbeef7;
+    padding: 20px;
+}
+
+.login-signup-box {
+    position: relative;
+    background-color: white;
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+.login-signup-box h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+.login-signup-container input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.login-signup-container button {
+    padding: 12px 20px;
+    background-color: #d19fe8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.login-signup-container button:hover {
+    background-color: #9900ff;
+}
+
+.toggle-form-button {
+    background: none;
+    border: none;
+    color: #d19fe8;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: color 0.3s ease;
+}
+
+.toggle-form-button:hover {
+    color: #b584d6;
+}
+
+.logout-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #d19fe8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #b584d6;
+}
+
+.password-toggle {
+    position: absolute !important;
+    right: 40px !important;
+    width: 20px !important;
+    height: 20px !important;
+    background-color: transparent !important;
+    border: none !important;
+    color: black !important;
+    
+    box-sizing: content-box;
+    padding: 4px !important;
+    transform: translateY(5px);
+}

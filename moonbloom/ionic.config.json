@@ -1,0 +1,7 @@
+{
+    "name": "moonbloom",
+    "integrations": {
+      "capacitor": {}
+    },
+    "type": "react"
+  }

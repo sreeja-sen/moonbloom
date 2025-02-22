@@ -1,0 +1,49 @@
+header {
+    background-color: #d19fe8;
+    padding: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1500px;
+    align-items: center;
+}
+
+.nav-left {
+    display: flex;
+    gap: 50px;
+}
+
+.logo {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+button {
+    background: none;
+    border: none;
+    color: #f0dafc;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+
+@media screen and (prefers-color-scheme: dark) {
+    header {
+        background-color: #8e44ad;
+    }
+
+    button {
+        color: #fff;
+    }
+}
